@@ -11,6 +11,7 @@ public class StartUp extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.window = new BlockListener();
+		this.scope = new ScopeZoomListener();
 		this.getServer().getPluginManager().registerEvents(window, this);
 		this.getServer().getPluginManager().registerEvents(scope, this);
 		this.getLogger().info("Breakable Windows enabled!");
