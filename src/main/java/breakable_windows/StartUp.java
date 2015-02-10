@@ -5,15 +5,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class StartUp extends JavaPlugin {
 	
-	private BlockListener window;
+	private BlockBreakListener window;
 	private ScopeZoomListener scope;
+	private BlockPlaceList place;
 	
 	@Override
 	public void onEnable() {
-		this.window = new BlockListener();
+		this.window = new BlockBreakListener();
 		this.scope = new ScopeZoomListener();
+		this.place = new BlockPlaceList();
+		
+		this.getServer().getPluginManager().registerEvents(place, this);
 		this.getServer().getPluginManager().registerEvents(window, this);
 		this.getServer().getPluginManager().registerEvents(scope, this);
+		
 		this.getLogger().info("Breakable Windows enabled!");
 
 	}
@@ -23,6 +28,7 @@ public class StartUp extends JavaPlugin {
 		this.getLogger().info("Restoring glass...");
 		this.window.disable();
 		this.scope.disable();
+		//this.place.disable();
 		this.getLogger().info("Restored glass! Breakable Windows disabled.");
 	}	
 }
