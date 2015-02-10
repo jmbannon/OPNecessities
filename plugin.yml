@@ -1,0 +1,4 @@
+name: BreakableWindows
+main: breakable_windows.StartUp
+version: 1.0
+depend: [CrackShot]
