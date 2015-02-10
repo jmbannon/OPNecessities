@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 
@@ -54,9 +53,8 @@ public class BlockBreakListener implements Listener {
 	}
 	
 	public boolean isSnow(final Block theBlock) {
-		final ItemStack tempSnow = new ItemStack(Material.SNOW);
-		tempSnow.getData().setData((byte)0);
-		return (theBlock.getState().getData().toItemStack().equals(tempSnow));
+		return (theBlock.getType() == Material.SNOW && 
+				theBlock.getState().getData().equals((byte)0));
 	}
 	
 	public boolean playerPlacable(final Block theBlock) {
