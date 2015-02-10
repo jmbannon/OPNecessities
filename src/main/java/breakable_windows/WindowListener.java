@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.event.Listener;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -19,26 +20,26 @@ public class WindowListener implements Listener {
 	private HashMap<Block, Material> blockList = new HashMap<>();
 
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void meleeBlockBreakEvent(BlockBreakEvent event) {
-		if (isGlass(event.getBlock())) {
-			chunckBreak(event.getBlock());
-			if (event.getPlayer().getItemInHand() == null ||
-					event.getPlayer().getItemInHand().getType() == Material.AIR) { 
-				event.getPlayer().damage(0.5);
+		if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+			if (isGlass(event.getBlock())) {
+				chunckBreak(event.getBlock());
+				if (event.getPlayer().getItemInHand() == null ||
+						event.getPlayer().getItemInHand().getType() == Material.AIR)
+					event.getPlayer().damage(0.5);
 			}
-			
+			else if (isLight(event.getBlock()))
+				storeAndBreakBlock(event.getBlock());
 		}
 	}
 		
-	
-	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void projectileBlockBreakEvent(WeaponHitBlockEvent event) {
+	public void projectileBlockBreakEvent(WeaponHitBlockEvent event) {		
 		if (isGlass(event.getBlock())) 
 			chunckBreak(event.getBlock());
-		else if (isNonEffectBlock(event.getBlock()))
-			event.getProjectile().remove();		
+		else if (isLight(event.getBlock()))
+			storeAndBreakBlock(event.getBlock());
 	}
 	
 	public boolean isNonEffectBlock(final Block nonEffectBlock) {
@@ -50,16 +51,9 @@ public class WindowListener implements Listener {
 				|| nonEffectBlock.getType() == Material.NETHER_FENCE);
 	}
 	
-	public void storeAndBreakGlass(final Block glassBlock) {
-		//final Material type = glassBlock.getType();
-		
-		blockList.put(glassBlock, glassBlock.getType());
-		
-		//if (type != Material.GLASS && type != Material.THIN_GLASS
-		//		&& type != Material.STAINED_GLASS && type != Material.STAINED_GLASS_PANE)
-			glassBlock.setType(Material.AIR);
-		//else
-		//	glassBlock.breakNaturally();
+	public void storeAndBreakBlock(final Block theBlock) {	
+		blockList.put(theBlock, theBlock.getType());
+		theBlock.setType(Material.AIR);
 				
 	}
 	
@@ -67,17 +61,20 @@ public class WindowListener implements Listener {
 		return (glassBlock.getType() == Material.GLASS
 				|| glassBlock.getType() == Material.THIN_GLASS
 				|| glassBlock.getType() == Material.STAINED_GLASS
-				|| glassBlock.getType() == Material.STAINED_GLASS_PANE
-				|| glassBlock.getType() == Material.GLOWSTONE
-				|| glassBlock.getType() == Material.REDSTONE_LAMP_ON
-				|| glassBlock.getType() == Material.REDSTONE_LAMP_OFF
-				|| glassBlock.getType() == Material.BEACON
-				|| glassBlock.getType() == Material.TORCH);
+				|| glassBlock.getType() == Material.STAINED_GLASS_PANE);
+	}
+	
+	public boolean isLight(final Block lightBlock) {
+		return (lightBlock.getType() == Material.GLOWSTONE
+				|| lightBlock.getType() == Material.REDSTONE_LAMP_ON
+				|| lightBlock.getType() == Material.REDSTONE_LAMP_OFF
+				|| lightBlock.getType() == Material.BEACON
+				|| lightBlock.getType() == Material.TORCH);
 	}
 	
 	public void checkToStoreGlass(final Block glassBlock) {
 		if (this.isGlass(glassBlock)) 
-			this.storeAndBreakGlass(glassBlock);
+			this.storeAndBreakBlock(glassBlock);
 	}
 	
 	public void checkConstBLocks(final Block glassBlock) {
@@ -135,8 +132,8 @@ public class WindowListener implements Listener {
 		final Random rand = new Random();
 		final int randNum = rand.nextInt((6-1) + 1) + 1;
 		
-		glassBlock.getWorld().playSound(glassBlock.getLocation(), Sound.GLASS, 1, 1);
-		this.storeAndBreakGlass(glassBlock);
+		//glassBlock.getWorld().playSound(glassBlock.getLocation(), Sound.GLASS, 1, 1);
+		this.storeAndBreakBlock(glassBlock);
 		
 		this.checkConstBLocks(glassBlock);
 			switch(randNum) {
@@ -152,7 +149,7 @@ public class WindowListener implements Listener {
 	
 	public void recursiveBreak(final Block glassBlock) {
 		
-		this.storeAndBreakGlass(glassBlock);
+		this.storeAndBreakBlock(glassBlock);
 		
 		if (glassBlock.getRelative(1, 0, 0).getType() == Material.GLASS
 				|| glassBlock.getRelative(1, 0, 0).getType() == Material.THIN_GLASS)
