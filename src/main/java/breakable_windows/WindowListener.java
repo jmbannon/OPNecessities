@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 
@@ -19,10 +20,33 @@ public class WindowListener implements Listener {
 	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void checkBlock(BlockBreakEvent event) {
+		if (isGlass(event.getBlock())) {
+			chunckBreak(event.getBlock());
+			if (event.getPlayer().getItemInHand() == null ||
+					event.getPlayer().getItemInHand().getType() == Material.AIR) { 
+				event.getPlayer().damage(0.5);
+			}
+		}
+	}
+		
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void checkGlass(WeaponHitBlockEvent event) {
 		if (isGlass(event.getBlock())) 
 			chunckBreak(event.getBlock());
-		
+		else if (isNonEffectBlock(event.getBlock()))
+			event.getProjectile().remove();		
+	}
+	
+	public boolean isNonEffectBlock(final Block nonEffectBlock) {
+		return (nonEffectBlock.getType() == Material.SNOW
+				|| nonEffectBlock.getType() == Material.CARPET
+				|| nonEffectBlock.getType() == Material.STONE_PLATE
+				|| nonEffectBlock.getType() == Material.WOOD_PLATE
+				|| nonEffectBlock.getType() == Material.FENCE
+				|| nonEffectBlock.getType() == Material.NETHER_FENCE);
 	}
 	
 	public void storeAndBreakGlass(final Block glassBlock) {
@@ -47,7 +71,8 @@ public class WindowListener implements Listener {
 				|| glassBlock.getType() == Material.GLOWSTONE
 				|| glassBlock.getType() == Material.REDSTONE_LAMP_ON
 				|| glassBlock.getType() == Material.REDSTONE_LAMP_OFF
-				|| glassBlock.getType() == Material.BEACON);
+				|| glassBlock.getType() == Material.BEACON
+				|| glassBlock.getType() == Material.TORCH);
 	}
 	
 	public void checkToStoreGlass(final Block glassBlock) {
