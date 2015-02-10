@@ -19,21 +19,22 @@ public class WindowListener implements Listener {
 	private HashMap<Block, Material> blockList = new HashMap<>();
 	
 	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void checkBlock(BlockBreakEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void meleeBlockBreakEvent(BlockBreakEvent event) {
 		if (isGlass(event.getBlock())) {
 			chunckBreak(event.getBlock());
 			if (event.getPlayer().getItemInHand() == null ||
 					event.getPlayer().getItemInHand().getType() == Material.AIR) { 
 				event.getPlayer().damage(0.5);
 			}
+			
 		}
 	}
 		
 	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void checkGlass(WeaponHitBlockEvent event) {
+	public void projectileBlockBreakEvent(WeaponHitBlockEvent event) {
 		if (isGlass(event.getBlock())) 
 			chunckBreak(event.getBlock());
 		else if (isNonEffectBlock(event.getBlock()))
@@ -53,7 +54,6 @@ public class WindowListener implements Listener {
 		final Material type = glassBlock.getType();
 		
 		blockList.put(glassBlock, glassBlock.getType());
-		glassBlock.getWorld().playSound(glassBlock.getLocation(), Sound.GLASS, 1, 1);
 		
 		if (type != Material.GLASS && type != Material.THIN_GLASS
 				&& type != Material.STAINED_GLASS && type != Material.STAINED_GLASS_PANE)
@@ -135,7 +135,9 @@ public class WindowListener implements Listener {
 		final Random rand = new Random();
 		final int randNum = rand.nextInt((6-1) + 1) + 1;
 		
+		glassBlock.getWorld().playSound(glassBlock.getLocation(), Sound.GLASS, 1, 1);
 		this.storeAndBreakGlass(glassBlock);
+		
 		this.checkConstBLocks(glassBlock);
 			switch(randNum) {
 			case 1: this.checkFormation1(glassBlock); break;
