@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import com.shampaggon.crackshot.events.WeaponExplodeEvent;
 import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 
 public class BlockBreakListener implements Listener {
@@ -29,12 +30,9 @@ public class BlockBreakListener implements Listener {
 						event.getPlayer().getItemInHand().getType() == Material.AIR)
 					event.getPlayer().damage(0.5);
 			}
-			else if (isLight(event.getBlock()) || playerPlacable(event.getBlock())) {
+			else if (isLight(event.getBlock())) {
 				event.getBlock().getWorld().playSound(event.getBlock().getLocation(), Sound.GLASS, 1, 1);
 				storeAndBreakBlock(event.getBlock());				
-			}
-			else if (isSnow(event.getBlock())) {
-				storeAndBreakBlock(event.getBlock());
 			}
 		}
 	}
@@ -47,28 +45,55 @@ public class BlockBreakListener implements Listener {
 			event.getBlock().getWorld().playSound(event.getBlock().getLocation(), Sound.GLASS, 1, 1);
 			storeAndBreakBlock(event.getBlock());
 		}
-		else if (isSnow(event.getBlock())) {
-			storeAndBreakBlock(event.getBlock());
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void meleeBlockBreakEvent(WeaponExplodeEvent event) {
+		checkSphere(event.getLocation().getBlock());
+	}
+	
+	public void checkSphere(final Block theBlock) {
+		
+		//First layer
+		checkGlass(theBlock.getRelative(0, 0, 0));
+		checkGlass(theBlock.getRelative(1, 0, 0));
+		checkGlass(theBlock.getRelative(-1, 0, 0));
+		checkGlass(theBlock.getRelative(0, 0, 1));
+		checkGlass(theBlock.getRelative(0, 0, -1));
+		checkGlass(theBlock.getRelative(2, 0, 0));
+		checkGlass(theBlock.getRelative(-2, 0, 0));
+		checkGlass(theBlock.getRelative(0, 0, 2));
+		checkGlass(theBlock.getRelative(0, 0, -2));
+		checkGlass(theBlock.getRelative(1, 0, 1));
+		checkGlass(theBlock.getRelative(-1, 0, 1));
+		checkGlass(theBlock.getRelative(1, 0, -1));
+		checkGlass(theBlock.getRelative(-1, 0, -1));
+		
+		//Upper sphere
+		checkGlass(theBlock.getRelative(0, 1, 0));
+		checkGlass(theBlock.getRelative(0, 2, 0));
+		checkGlass(theBlock.getRelative(1, 1, 0));
+		checkGlass(theBlock.getRelative(-1, 1, 0));
+		checkGlass(theBlock.getRelative(0, 1, 1));
+		checkGlass(theBlock.getRelative(0, 1, -1));
+		
+		
+		//Lower sphere
+		checkGlass(theBlock.getRelative(0, -1, 0));
+		checkGlass(theBlock.getRelative(0, -2, 0));
+		checkGlass(theBlock.getRelative(1, -1, 0));
+		checkGlass(theBlock.getRelative(-1, -1, 0));
+		checkGlass(theBlock.getRelative(0, -1, 1));
+		checkGlass(theBlock.getRelative(0, -1, -1));
+	}
+	
+	public void checkGlass(final Block theBlock) {
+		if (theBlock.getType() == Material.GLASS ||
+				theBlock.getType() == Material.THIN_GLASS)
+			recursiveBreak(theBlock);
+		else if(isLight(theBlock)) {
+			this.storeAndBreakBlock(theBlock);
 		}
-	}
-	
-	public boolean isSnow(final Block theBlock) {
-		return (theBlock.getType() == Material.SNOW && 
-				theBlock.getState().getData().equals((byte)0));
-	}
-	
-	public boolean playerPlacable(final Block theBlock) {
-		return (theBlock.getType() == Material.SPONGE
-				|| theBlock.getType() == Material.TORCH);
-	}
-	
-	public boolean isNonEffectBlock(final Block nonEffectBlock) {
-		return (nonEffectBlock.getType() == Material.SNOW
-				|| nonEffectBlock.getType() == Material.CARPET
-				|| nonEffectBlock.getType() == Material.STONE_PLATE
-				|| nonEffectBlock.getType() == Material.WOOD_PLATE
-				|| nonEffectBlock.getType() == Material.FENCE
-				|| nonEffectBlock.getType() == Material.NETHER_FENCE);
 	}
 	
 	public void storeAndBreakBlock(final Block theBlock) {	
@@ -167,7 +192,7 @@ public class BlockBreakListener implements Listener {
 			}
 	}
 	
-	public void recursiveBreak(final Block glassBlock) {
+public void recursiveBreak(final Block glassBlock) {
 		
 		this.storeAndBreakBlock(glassBlock);
 		
