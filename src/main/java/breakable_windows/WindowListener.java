@@ -17,7 +17,7 @@ import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 public class WindowListener implements Listener {
 	
 	private HashMap<Block, Material> blockList = new HashMap<>();
-	
+
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void meleeBlockBreakEvent(BlockBreakEvent event) {
@@ -51,15 +51,15 @@ public class WindowListener implements Listener {
 	}
 	
 	public void storeAndBreakGlass(final Block glassBlock) {
-		final Material type = glassBlock.getType();
+		//final Material type = glassBlock.getType();
 		
 		blockList.put(glassBlock, glassBlock.getType());
 		
-		if (type != Material.GLASS && type != Material.THIN_GLASS
-				&& type != Material.STAINED_GLASS && type != Material.STAINED_GLASS_PANE)
+		//if (type != Material.GLASS && type != Material.THIN_GLASS
+		//		&& type != Material.STAINED_GLASS && type != Material.STAINED_GLASS_PANE)
 			glassBlock.setType(Material.AIR);
-		else
-			glassBlock.breakNaturally();
+		//else
+		//	glassBlock.breakNaturally();
 				
 	}
 	
