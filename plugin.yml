@@ -1,4 +1,34 @@
-name: BreakableWindows
-main: breakable_windows.StartUp
-version: 1.0
-depend: [CrackShot]
+name: OPNecessities
+main: main.StartUp
+version: 1.2
+commands:
+  tp:
+    description: Teleports to specified player.
+    usage: "Usage: /tp <player>"
+  tph:
+    description: Teleports specified player to you.
+    usage: "Usage: /tph <player>"
+  warp:
+    description: Manages OP warps.
+    usage: "Usage: /warp <args> <projectName>"
+  pwarp:
+    description: Manages personal warps.
+    usage: "Usage: /pwarp <args> <projectName>"
+  back:
+    description: Teleports to most recent tp spot.
+    usage: "Usage: /back"
+  ci:
+    description: Clears inventory.
+    usage: "Usage: /ci"
+  i:
+    description: Gives item to sender.
+    usage: "Usage: /i <block ID> <amount>"
+  idb:
+    description: Gets info of current block in hand.
+    usage: "Usage: /idb"
+  gm:
+    description: Sets gamemode.
+    usage: "Usage: /gm <gamemode #>"
+  speed:
+    description: Sets flying speed.
+    usage: "Usage: /speed <flying speed>"
