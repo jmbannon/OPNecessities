@@ -1,28 +1,26 @@
-package main;
+package commands;
 
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-public class PlayerExec implements CommandExecutor {
-
-	Plugin plugin;
+public class Player_Commands extends Command_Methods implements CommandExecutor {
 	
-	public PlayerExec(StartUp plugin) {
-		this.plugin = plugin;
+	public Player_Commands() {
+		return; /* Do nothing. */
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		final Player playerOne = (Player) sender;
 		
-		if (!playerOne.isOp())
-			return true;
+		//if (!playerOne.isOp())
+		//	return true;
 		
-		if (cmd.getName().equalsIgnoreCase("gm")) {
+		//if (cmd.getName().equalsIgnoreCase("gm")) {
+		if (this.hasPermission(playerOne, cmd, "gm", "opn.gm")) {
 			if (args.length == 1 && args[0].matches("[0-3]+")) {
 				switch(args[0]) {
 				case "0": playerOne.setGameMode(GameMode.SURVIVAL); break;
@@ -38,11 +36,12 @@ public class PlayerExec implements CommandExecutor {
 			}
 		}
 		
-		else if (cmd.getName().equalsIgnoreCase("speed")) {
-			if (args.length == 1 && args[0].matches("[0-9]+") && args[0].length() == 1)
-				playerOne.setFlySpeed(Float.valueOf(args[0])/10);
+		//else if (cmd.getName().equalsIgnoreCase("speed")) {
+		else if (this.hasPermission(playerOne, cmd, "speed", "opn.speed")) {
+			if (args.length == 1 && args[0].matches("[0-9]+") && args[0].length() <= 2)
+				playerOne.setFlySpeed(Float.valueOf(args[0])/100);
 			else
-				playerOne.sendMessage("/speed <0-9>");
+				playerOne.sendMessage("/speed <0-99>");
 		}
 		
 		return true;

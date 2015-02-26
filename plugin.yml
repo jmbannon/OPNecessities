@@ -1,5 +1,5 @@
 name: OPNecessities
-main: main.StartUp
+main: main.Main
 version: 1.2
 commands:
   tp:
@@ -32,3 +32,9 @@ commands:
   speed:
     description: Sets flying speed.
     usage: "Usage: /speed <flying speed>"
+  time:
+    description: Changes the time of day.
+    usage: "Usage: /time <0-23>"
+  killmobs:
+    description: Kills all hostile mobs in current world.
+    usage: "Usage: /killmobs"

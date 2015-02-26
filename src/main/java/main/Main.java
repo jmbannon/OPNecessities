@@ -17,22 +17,31 @@ package main;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import commands.Item_Commands;
+import commands.PersonalWarp_Commands;
+import commands.Player_Commands;
+import commands.Teleport_Commands;
+import commands.AdminWarp_Commands;
+import commands.World_Commands;
 
-public class StartUp extends JavaPlugin {
+
+public class Main extends JavaPlugin {
 	
-	private TeleportExec teleExec;
-	private PWarp pWarpExec;
-	private Warp warpExec;
-	private ItemExec itemExec;
-	private PlayerExec playerExec;
+	private Teleport_Commands teleExec;
+	private PersonalWarp_Commands pWarpExec;
+	private AdminWarp_Commands warpExec;
+	private Item_Commands itemExec;
+	private Player_Commands playerExec;
+	private World_Commands worldExec;
 	
 	@Override
 	public void onEnable() {
-		teleExec = new TeleportExec(this);
-		pWarpExec = new PWarp(this);
-		warpExec = new Warp(this);
-		itemExec = new ItemExec(this);
-		playerExec = new PlayerExec(this);
+		teleExec = new Teleport_Commands(this);
+		pWarpExec = new PersonalWarp_Commands(this);
+		warpExec = new AdminWarp_Commands(this);
+		itemExec = new Item_Commands();
+		playerExec = new Player_Commands();
+		worldExec = new World_Commands();
 		
 		pWarpExec.loadConfig();
 		warpExec.loadConfig();
@@ -51,6 +60,9 @@ public class StartUp extends JavaPlugin {
 		
 		this.getCommand("gm").setExecutor(playerExec);
 		this.getCommand("speed").setExecutor(playerExec);
+		
+		this.getCommand("time").setExecutor(worldExec);
+		this.getCommand("killmobs").setExecutor(worldExec);
 		
 		this.getLogger().info("OPNecessities Enabled!");
 	}

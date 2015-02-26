@@ -13,16 +13,17 @@ License: This is open-source code. Please feel
 ==============================================================
  */
 
-package main;
+package commands;
 
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-public class Teleport {
+public class Command_Methods {
 
-	private HashMap<Player, Location> locations = new HashMap<>();
+	private static HashMap<Player, Location> locations = new HashMap<>();
 	
 	/**
 	 * Stores current player location to teleport back to and
@@ -52,13 +53,17 @@ public class Teleport {
 		
 	}
 	
-
-	
 	/**
 	 * Clears hashmap of back locations.
 	 */
 	public void onDisable() {
 		locations.clear();
+	}
+	
+	public boolean hasPermission(final Player player, final Command cmd,
+			final String command, final String permission) {
+		return ((player.isOp() || player.hasPermission(permission)) 
+				&& cmd.getName().equalsIgnoreCase(command));
 	}
 	
 }

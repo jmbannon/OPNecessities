@@ -1,4 +1,4 @@
-package main;
+package commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,15 +12,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-public class Warp extends Teleport implements CommandExecutor {
+public class AdminWarp_Commands extends Command_Methods implements CommandExecutor {
 	
-	private StartUp plugin;
+	private Plugin plugin;
 	private File warpConfig = null;
 	private FileConfiguration warpFileConfig = null;
 	
-	public Warp(StartUp plugin) {
+	public AdminWarp_Commands(Plugin plugin) {
 		this.plugin = plugin;
 		this.warpConfig = null;
 		this.warpFileConfig = null;
@@ -33,7 +34,8 @@ public class Warp extends Teleport implements CommandExecutor {
 		 * /warp <args> <project name>
 		 *   project warps
 		 */
-		if (playerOne.isOp() && cmd.getName().equalsIgnoreCase("warp")) {
+		//if (playerOne.isOp() && cmd.getName().equalsIgnoreCase("warp")) {
+		if (this.hasPermission(playerOne, cmd, "warp", "opn.warp")) {
 			
 			if (args.length == 0) {
 				playerOne.sendMessage("/warp <project name>    - warps to project");
@@ -71,7 +73,7 @@ public class Warp extends Teleport implements CommandExecutor {
 	 * @param prName Project name to teleport to.
 	 * @param file YAML file that stores project location information.
 	 */
-	public void teleWarp(final Player sender, final String prName, 
+	private void teleWarp(final Player sender, final String prName, 
 			final FileConfiguration file) {
 		
 		final String path = "warps." + prName;
@@ -95,7 +97,7 @@ public class Warp extends Teleport implements CommandExecutor {
 	 * @param prName Name of the project warp to create.
 	 * @param file YAML file that stores project location information.
 	 */
-	public void create(final Player sender, final String prName,
+	private void create(final Player sender, final String prName,
 			final FileConfiguration file) {
 		
 		final String path = "warps." + prName;
@@ -114,7 +116,7 @@ public class Warp extends Teleport implements CommandExecutor {
 	 * @param prName Name of the project warp to delete.
 	 * @param file YAML file that stores project location information.
 	 */
-	public void remove(final Player sender, final String prName,
+	private void remove(final Player sender, final String prName,
 			final FileConfiguration file) {
 		
 		final String path = "warps." + prName;
@@ -129,7 +131,7 @@ public class Warp extends Teleport implements CommandExecutor {
 	 * @param sender Sender of the warp list command.
 	 * @param file YAML file that stores project location information.
 	 */
-	public void list(final Player sender, final FileConfiguration file) {
+	private void list(final Player sender, final FileConfiguration file) {
 		sender.sendMessage("projects: ");
 		for (String key : file.getConfigurationSection("warps").getKeys(false)) {
 			sender.sendMessage(" - " + key);
@@ -152,7 +154,7 @@ public class Warp extends Teleport implements CommandExecutor {
 	/**
 	 * Saves all changes to file and file configuration.
 	 */
-	public void saveConfig() {
+	private void saveConfig() {
 		if (warpConfig == null || warpFileConfig == null)
 			return;
 							

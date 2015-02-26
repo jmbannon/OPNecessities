@@ -1,4 +1,4 @@
-package main;
+package commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-public class PWarp extends Teleport implements CommandExecutor {
+public class PersonalWarp_Commands extends Command_Methods implements CommandExecutor {
 	
 	private Plugin plugin;
 	private File pWarpConfig;
 	private FileConfiguration pWarpFileConfig;
 	
-	public PWarp(StartUp plugin) {
+	public PersonalWarp_Commands(Plugin plugin) {
 		this.plugin = plugin;
 		this.pWarpConfig = null;
 		this.pWarpFileConfig = null;
@@ -37,8 +37,8 @@ public class PWarp extends Teleport implements CommandExecutor {
 		
 		final Player playerOne = (Player) sender;
 		
-		if (playerOne.isOp() && cmd.getName().equalsIgnoreCase("pwarp")) {
-			
+		//if (playerOne.isOp() && cmd.getName().equalsIgnoreCase("pwarp")) {
+		if (this.hasPermission(playerOne, cmd, "pwarp", "opn.pwarp")) {
 			if (args.length == 0) {
 				playerOne.sendMessage("/pwarp <project name>    - warps to project");
 				playerOne.sendMessage("/pwarp c <project name>  - creates project warp");
@@ -104,7 +104,7 @@ public class PWarp extends Teleport implements CommandExecutor {
 			FileConfiguration file) {
 		
 		if (file == null)
-			sender.sendMessage("Shit is null!");
+			sender.sendMessage("The file is null! Please contact the server administrator.");
 			
 		final String path = sender.getUniqueId().toString().replace("-", "") + "." + prName;
 		

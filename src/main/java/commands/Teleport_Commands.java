@@ -12,7 +12,9 @@ License: This is open-source code. Please feel
          free to modify or use.
 ==============================================================
 */
-package main;
+package commands;
+
+import main.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,11 +22,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TeleportExec implements CommandExecutor {
+public class Teleport_Commands extends Command_Methods implements CommandExecutor {
 	
-	private Teleport teleport = new Teleport();
-	
-	public TeleportExec(StartUp plugin) {
+	public Teleport_Commands(Main plugin) {
 		return; /* Do nothing */
 	}
 	
@@ -35,15 +35,16 @@ public class TeleportExec implements CommandExecutor {
 		/**
 		 * Only runs the command if player is OP.
 		 */
-		if (!playerOne.isOp())
-			return true;
+		//if (!playerOne.isOp())
+		//	return true;
 		
 		/**
 		 * /tp <name>
 		 *   Teleports player to online player that
 		 *   matches character sequence first.
 		 */
-		if (cmd.getName().equalsIgnoreCase("tp")) {
+		//if (cmd.getName().equalsIgnoreCase("tp")) {
+		if (this.hasPermission(playerOne, cmd, "tp", "opn.tp")) {
 			
 			if (args.length == 0) {
 				playerOne.sendMessage("/tp <player name>");
@@ -52,7 +53,7 @@ public class TeleportExec implements CommandExecutor {
 			
 			for (Player tpPlayer : Bukkit.getServer().getOnlinePlayers()) {
 				if (tpPlayer.getName().toLowerCase().contains(args[0].toLowerCase())) {
-					teleport.teleport(playerOne, tpPlayer.getLocation());
+					this.teleport(playerOne, tpPlayer.getLocation());
 					return true;
 				}
 			}
@@ -62,14 +63,16 @@ public class TeleportExec implements CommandExecutor {
 		 * /back
 		 *  Teleports player back to most recent place of a tele command.
 		 */
-		else if(cmd.getName().equalsIgnoreCase("back"))
-			this.teleport.baTeleport(playerOne);
+		//else if(cmd.getName().equalsIgnoreCase("back"))
+		else if (this.hasPermission(playerOne, cmd, "back", "opn.back"))
+			this.baTeleport(playerOne);
 		
 		/**
 		 * /tph <name>
 		 *   Teleports specified player to caller.
 		 */
-		else if (cmd.getName().equalsIgnoreCase("tph")) {
+		//else if (cmd.getName().equalsIgnoreCase("tph")) {
+		else if (this.hasPermission(playerOne, cmd, "tph", "opn.tph")) {
 			
 			if (args.length == 0) {
 				playerOne.sendMessage("/tp <player name>");
@@ -78,7 +81,7 @@ public class TeleportExec implements CommandExecutor {
 			
 			for (Player tpPlayer : Bukkit.getServer().getOnlinePlayers()) {
 				if (tpPlayer.getName().toLowerCase().contains(args[0].toLowerCase())) {
-					teleport.teleport(tpPlayer, playerOne.getLocation());
+					this.teleport(tpPlayer, playerOne.getLocation());
 					return true;
 				}
 			}
@@ -93,7 +96,7 @@ public class TeleportExec implements CommandExecutor {
 	 * Clears HashMap of back warp locations.
 	 */
 	public void onDisable() {
-		teleport.onDisable();
+		this.onDisable();
 	}
 
 }
