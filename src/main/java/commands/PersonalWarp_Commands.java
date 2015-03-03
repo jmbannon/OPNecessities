@@ -140,7 +140,9 @@ public class PersonalWarp_Commands extends Command_Methods implements CommandExe
 	 */
 	public void list(final Player sender, final FileConfiguration file) {
 		sender.sendMessage("projects: ");
-		for (String key : file.getConfigurationSection(sender.getUniqueId().toString().replace("-", "")).getKeys(false)) {
+		for (String key : file.getConfigurationSection
+				(sender.getUniqueId().toString().replace("-", "")).getKeys(false)) {
+			
 			sender.sendMessage(" - " + key);
 		}
 	}

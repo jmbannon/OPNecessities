@@ -32,7 +32,7 @@ public class Item_Commands extends Command_Methods implements CommandExecutor {
 			if (args.length == 0)
 				playerOne.sendMessage("/i <itemID> <amount>");
 			
-			else if (args.length == 1 && !args[0].isEmpty()) {
+			else if (args.length >= 1 && !args[0].isEmpty()) {
 				final String[] parts = args[0].split(":");
 				int amount = 1;
 				byte data = 0;

@@ -44,6 +44,11 @@ public class Player_Commands extends Command_Methods implements CommandExecutor 
 				playerOne.sendMessage("/speed <0-99>");
 		}
 		
+		else if (this.hasPermission(playerOne, cmd, "heal", "opn.heal")) {
+			playerOne.setHealth(playerOne.getMaxHealth());
+			playerOne.setFoodLevel(20);
+		}
+		
 		return true;
 	}
 }
